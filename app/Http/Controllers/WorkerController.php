@@ -17,7 +17,6 @@ class WorkerController extends Controller
     
     public function edit_worker(Request $request){
 		$worker_id = Auth::id();
-        
         if($request->input('action') == "更新"){
             $rules = [
                 'name_1' => 'required',
@@ -107,30 +106,21 @@ class WorkerController extends Controller
 	public function worker_editfinish(Request $request){
 	    return view("worker/worker_editfinish");
 	}
-	
+
     public function list_order(Request $request){
-
-        $now_order_list = DB::table("orders")->where("worker_id", Auth::id())->get();
-
-        $order_list = [];
-        foreach($now_order_list as $now){
-             $order_list[] = $now;
-        }
-
+        $worker_id = Auth::id();
+        $order_list = DB::table("orders")->where("worker_id", $worker_id)->paginate(10);
         return view("worker/list_order")->with([
             "order_list" => $order_list
         ]);
     }
 	
     public function view_order(Request $request){
-
         if( $request->input("order_id") == ""){
             return redirect("worker/list_order");
         }
-
         $order_id = $request->input("order_id");
         $now_order = DB::table("orders")->where("id", $order_id)->get();
-
         // 該当するユーザーがいなかったらリダイレクト
         if($now_order == null){
             return redirect("worker/list_order");
@@ -143,19 +133,16 @@ class WorkerController extends Controller
 		$date = date("Y/m/d H:i:s");
 
 		if( $request->input("action") == "完了" ) {
-			
 			$status = $request->input("status");
-			
-			DB::table('orders')->where("id",$order_id)->update([
+			DB::table('orders')->where("id", $order_id)->update([
                 'status' => $status,
             ]);
-			
-		}		
+			$now_order = DB::table("orders")->where("id", $order_id)->get();
+			$order = $now_order[0];
+		}
 		
 		if( $request->input("action") == "送信" ) {
-			
 			$content = $request->input("content");
-
 			DB::table('talks')->insert([
                 'order_id' => $order_id,
                 'user_id' => $user_id,

@@ -144,7 +144,7 @@
         </ul>
     </nav>
             <div class="card">
-                <div class="card-header bold" style="font-size:25px;">依頼の詳細</div>
+                <div class="card-header bold" style="font-size:25px;">依頼詳細</div>
                 <div class="card-body">
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">

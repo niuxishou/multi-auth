@@ -482,7 +482,6 @@ class StylistAdminController extends Controller
         $worker_id = $request->input("worker_id");
         
         if($request->input('action') == "更新"){
-            
             $rules = [
                 'name_1' => 'required',
                 'name_2' => 'required',
@@ -645,14 +644,12 @@ class StylistAdminController extends Controller
         }
         $order_id = $request->input("order_id");
         $now_order = DB::table("orders")->where("id", $order_id)->get();
-        
         // 該当するユーザーがいなかったらリダイレクト
         if($now_order == null){
             return redirect("/stylistadmin/list_order");
         }
         
         $order = $now_order[0];
-        
         $now_user = DB::table("users")->where("id", $order->user_id)->get();
         if($now_user == null){
             return redirect("/stylistadmin/list_order");

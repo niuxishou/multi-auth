@@ -160,7 +160,7 @@
                 </a>
 	    </li>
             <li class="nav-item">
-                <a href="/worker/list_order" class="nav-link">
+                <a href="/worker/list_review" class="nav-link">
                     レビュー一覧
                 </a>
             </li>

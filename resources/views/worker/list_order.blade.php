@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>ルーム・サロン管理サイト | 依頼一覧</title>
+        <title>ルーム・サロン管理 | 依頼一覧</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
@@ -34,26 +34,20 @@
 			a:hover{
 				opacity:0.7;
 			}
-			
 			nav{
-			   font-size: 14px;
+				font-size:14px;
+			}
+			.nav-title a{
+				font-weight:800;
+				padding-left:4px !important;
+			}
+			.nav-item a{
+				padding-left:12px;
 			}
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+			.card{
+				font-size: 13px;
+			}
 
             .content {
                 text-align: center;
@@ -63,21 +57,12 @@
                 font-size: 84px;
             }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
             .m-b-md {
                 margin-bottom: 30px;
             }
+			
 			.row1{
-				width:15%;
+				width:5%;
 			}
 			.row2{
 				width:15%;
@@ -89,13 +74,13 @@
 				width:15%;
 			}
 			.row5{
-				width:15%;
+				width:10%;
 			}
 			.row6{
-				width:15%;
+				width:10%;
 			}
 			.row7{
-				width:5%;
+				width:10%;
 			}
 			.row8{
 				width:20%;
@@ -104,14 +89,34 @@
 				list-style: none;
 				padding-left:0;
 			}
-			.card-body{
-				font-size: 13px;
+			
+			.flex-center{
+				height:60px;
+			}
+			.top-right{
+				float: right;
+				margin:20px 5% 0 0;
+			}
+			.top-right a{
+				vertical-align: middle;
+				color: #888;
+				font-size:14px;
+			}
+			
+			.sidebar{
+				border:1px solid #DDD;
+				margin-right:1%;
 			}
 			
         </style>
     </head>
     <body>
-  <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+        <div class="flex-center position-ref full-height">
+            <div class="top-right links">
+                <a href="/worker/logout">ログアウト</a>
+            </div>
+        </div>
+<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item nav-title">
                     <a class="nav-link">
@@ -141,7 +146,7 @@
                 <a href="/worker/schedule" class="nav-link">
                     スケジュール管理
                 </a>
-			</li>           
+	    </li>          
             <li class="nav-item">
                 <a href="/worker/list_order" class="nav-link active">
                     依頼一覧
@@ -182,14 +187,14 @@
                         <th class="row2">依頼ユーザー名</th>
                         <th class="row4">依頼内容</th>
                         <th class="row5">ポイント移動</th>
-                        <th class="row6">依頼日時</th>
+                        <th class="row6">依頼日付</th>
                         <th class="row7">ステータス</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($order_list as $order)
                         <tr>
-                            <td><a href="/worker/view_order?order_id={{$order->id}}">詳細を閲覧</a></td>
+                            <td><a href="/worker/view_order?order_id={{$order->id}}">詳細</a></td>
                             <td>{{$order->user_name}}</td>
                             <td>
                             <ul>
@@ -207,7 +212,9 @@
                     @endforeach
                     </tbody>
                 </table>
+                {{$order_list->appends(Request::except('page'))->links()}}
             </div>
+            <p><a href="#" onclick="window.history.back(); return false;" style="font-size: 15px;">直前のページに戻る</a></p>
         </div>
     </body>
 </html>

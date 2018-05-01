@@ -190,8 +190,16 @@
                         <tr>
                             <td><a href="/stylistadmin/view_order?order_id={{$order->id}}">詳細</a></td>
                             <td>{{$order->user_name}}</td>
-                            <td>{{$order->worker_name}}</td>
-                            <td><ul><li>{{$order->content_1}}</li><li>{{$order->content_2}}</li><li>{{$order->content_3}}</li><li>{{$order->content_4}}</li><li>{{$order->content_5}}</li><li>{{$order->content_6}}</li></ul></td>
+			    <td>{{$order->worker_name}}</td>
+                            <td>
+                            <ul>
+                            @if ($order->content_1 != "")<li>{{$order->content_1}}</li>@endif
+                            @if ($order->content_2 != "")<li>{{$order->content_2}}</li>@endif
+                            @if ($order->content_3 != "")<li>{{$order->content_3}}</li>@endif
+                            @if ($order->content_4 != "")<li>{{$order->content_4}}</li>@endif
+                            @if ($order->content_5 != "")<li>{{$order->content_5}}</li>@endif
+                            @if ($order->content_6 != "")<li>{{$order->content_6}}</li>@endif
+                            </ul></td>
                             <td>{{$order->points}}</td>
                             <td>{{$order->created_at}}</td>
                             <td>{{$order->status}}</td>
@@ -203,6 +211,5 @@
             </div>
             <p><a href="#" onclick="window.history.back(); return false;" style="font-size: 15px;">直前のページに戻る</a></p>
         </div>
-        
     </body>
 </html>

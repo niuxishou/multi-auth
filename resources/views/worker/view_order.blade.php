@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>ルーム・サロン管理画面 | 依頼内容閲覧</title>
+        <title>ルーム・サロン管理 | 依頼内容閲覧</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
@@ -13,8 +13,6 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
         
         <!-- JavaScripts -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 
         <!-- Styles -->
         <style>
@@ -36,46 +34,36 @@
 			a:hover{
 				opacity:0.7;
 			}
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+			
+			nav{
+				font-size: 14px;
+			}
+			.nav-title a{
+				font-weight:800;
+				padding-left:4px !important;
+			}
+			.nav-item a{
+				padding-left:12px;
+			}
 
             .content {
                 text-align: center;
             }
+			.sidebar{
+				border:1px solid #DDD;
+				margin-right:1%;
+			}
 
             .title {
                 font-size: 84px;
             }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
 
             .m-b-md {
                 margin-bottom: 30px;
             }
 			
-			nav{
+			.apply{
 				font-size: 14px;
 			}
 			.apply h3{
@@ -95,7 +83,7 @@
 				width:100%;
 			}
 			.form-group{
-				padding:15px 0 30px;
+				padding:15px 0 40px;
 			}
 			.conversation{
 				width:90%;
@@ -122,14 +110,43 @@
 				font-size:14px;
 				resize:none;
 			}
-			
 			.card-body{
 				font-size: 13px;
+			}
+			
+			.btn-success{
+				width:60px;
+				height:30px;
+				font-size: 15px;
+			}
+			.flex-center{
+				height:60px;
+			}
+			.top-right{
+				float: right;
+				margin:20px 5% 0 0;
+			}
+			.top-right a{
+				vertical-align: middle;
+				color: #888;
+				font-size:14px;
+			}
+			
+			.alert{
+				font-size: 13px;
+			}
+			.error{
+				border-color: #EE1114;
 			}
         </style>
     </head>
     <body>
-  <nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
+        <div class="flex-center position-ref full-height">
+            <div class="top-right links">
+                <a href="/worker/logout">ログアウト</a>
+            </div>
+        </div>
+<nav class="col-sm-3 col-md-2 hidden-xs-down bg-faded sidebar">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item nav-title">
                     <a class="nav-link">
@@ -159,7 +176,7 @@
                 <a href="/worker/schedule" class="nav-link">
                     スケジュール管理
                 </a>
-			</li>          
+	    </li>          
             <li class="nav-item">
                 <a href="/worker/list_order" class="nav-link active">
                     依頼一覧
@@ -219,14 +236,12 @@
                             <div class="form-layout-title form-style-required">依頼内容</div>
                         </div>
                         <div class="col-sm-9 col-md-9">
-                            <ul>
-                            @if ($order->content_1 != "")<li>{{$order->content_1}}</li>@endif
-                            @if ($order->content_2 != "")<li>{{$order->content_2}}</li>@endif
-                            @if ($order->content_3 != "")<li>{{$order->content_3}}</li>@endif
-                            @if ($order->content_4 != "")<li>{{$order->content_4}}</li>@endif
-                            @if ($order->content_5 != "")<li>{{$order->content_5}}</li>@endif
-                            @if ($order->content_6 != "")<li>{{$order->content_6}}</li>@endif
-                            </ul>
+                            @if ($order->content_1 != "") {{$order->content_1}} / @endif
+                            @if ($order->content_2 != "") {{$order->content_2}} / @endif
+                            @if ($order->content_3 != "") {{$order->content_3}} / @endif
+                            @if ($order->content_4 != "") {{$order->content_4}} / @endif
+                            @if ($order->content_5 != "") {{$order->content_5}} / @endif
+                            @if ($order->content_6 != "") {{$order->content_6}}   @endif
                         </div>
                     </div>
                     <hr>
@@ -239,30 +254,39 @@
                         </div>
                     </div>
                     <hr>
-                    <form method="post" action="/worker/view_order?order_id={{ $order->id }}">
-                     {{ csrf_field() }}
-					<p>依頼が完了したら、こちらのボタンを押してください。</p>
+                <form method="post" action="/worker/view_order?order_id={{ $order->id }}">
+                    {{ csrf_field() }}
                     <input type="hidden" name="status" value="完了">
-                    <center><input name="action" id="submit_button" type="submit" value="完了"></center>
-			        </form>
-                    <br>
-                    <h4 style="font-weight:800;">メッセージ</h4>
+                    <div class="form-group center">
+                    	<div class="col-sm-3 col-md-3">
+                            <div class="form-layout-title form-style-required">依頼が完了後このボタンを押してください。</div>
+                        </div>
+                		<div class="col-sm-9 col-md-9">
+                        	<input name="action" id="submit_button" class="btn btn-success" type="submit" value="完了">
+                    	</div>
+                    </div>
+                </form>
+                    <hr>
+                    <h3 style="font-weight:800;">メッセージ</h3>
                     <div style="width:100%;">
                     @foreach ($conv_list as $conv)
                      <div class="conversation">
-                      <h6>{{$conv->name}}<srtrong>{{$conv->date}}</srtrong></h6>
+                      <h6>{{$conv->name}} <srtrong>{{$conv->date}}</srtrong></h6>
                       <p>{{$conv->content}}</p>
                      </div>
                     @endforeach
-                    <br>
+                    <hr>
                     <h4 style="font-weight:800;">新しいメッセージを送信</h4>
                     <form method="post" action="/worker/view_order?order_id={{ $order->id }}">
                      {{ csrf_field() }}
 					<textarea name="content" id="content"></textarea>
-                    <center><input name="action" id="submit_button" type="submit" value="送信"></center>
+					<div class="form-group center">
+                    	<center><input name="action" id="submit_button" class="btn btn-success" type="submit" value="送信"></center>
+			        </div>			        
 			        </form>
 			        </div>
             </div>
         </div>
+	<p><a href="#" onclick="window.history.back(); return false;" style="font-size: 15px;">直前のページに戻る</a></p>
     </body>
 </html>
