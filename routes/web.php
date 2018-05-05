@@ -157,14 +157,16 @@ Route::get('worker/home', 'Worker\HomeController@index')->name('worker.home');
 Route::get('worker/edit_worker', 'WorkerController@edit_worker');
 Route::post('worker/edit_worker', 'workerController@edit_worker');
 Route::get('worker/worker_editfinish', 'workerController@worker_editfinish');
-
 Route::get('worker/list_order', 'WorkerController@list_order');
 Route::get('worker/view_order', 'WorkerController@view_order');
 Route::post('worker/view_order', 'WorkerController@view_order');
 Route::get('worker/schedule', 'WorkerController@schedule');
 Route::post('worker/schedule', 'WorkerController@schedule');
-Route::get('worker/view_karte', 'WorkerController@view_karte');
+Route::get('worker/edit_schedule', 'WorkerController@edit_schedule');
+Route::post('worker/edit_schedule', 'WorkerController@edit_schedule');
 Route::get('worker/list_review', 'WorkerController@list_review');
+
+Route::get('worker/view_karte', 'WorkerController@view_karte');
 Route::get('worker/create_karte', 'WorkerController@create_karte');
 Route::post('worker/create_karte', 'WorkerController@create_karte');
 Route::get('worker/create_report', 'WorkerController@create_report');

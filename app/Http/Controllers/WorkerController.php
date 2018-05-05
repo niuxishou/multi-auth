@@ -154,7 +154,6 @@ class WorkerController extends Controller
 		}
 		
 		$conv_list = DB::table("talks")->where("order_id", $order_id)->get();
-		
         return view("worker/view_order")->with([
             "order" => $order,
 			"conv_list" => $conv_list,
@@ -162,20 +161,32 @@ class WorkerController extends Controller
     }
 
     public function schedule(Request $request){
-
 		$worker_id = Auth::id();
-
 		if( $request->input("action") == "登録" ) {
-			
-			$date = $request->input("date");
+		    $rules = [
+		        'mydate' => 'required',
+		        'condition' => 'required',
+		    ];
+		    $messages = [
+		        'mydate.required' => '日付は必ず入力してください。',
+		        'condition.required' => '現在の空き状況は必ず入力してください。',
+		    ];
+		    $validator = Validator::make($request->all(), $rules, $messages);
+		    $errors = $validator->errors();
+		    //$request->flash();
+		    if($validator->fails()) {
+		        return redirect()->to("worker/schedule")
+		              ->withErrors($validator)
+		              ->withInput();
+		    }
+			$mydate = $request->input("mydate");
 			$start_time = $request->input("start_time");
 			$end_time = $request->input("end_time");
 			$condition = $request->input("condition");
 			$bikou = $request->input("bikou");
-
 			DB::table('schedules')->insert([
                 'worker_id' => $worker_id,
-                'date' => $date,
+			    'date' => $mydate,
                 'start_time' => $start_time,
 				'end_time' => $end_time,
 				'condition' => $condition,
@@ -184,80 +195,69 @@ class WorkerController extends Controller
 		}
 		
 		$schedule_list = DB::table("schedules")->where("worker_id", $worker_id)->get();
-
+		$default_date = date('y-m-d');
         return view("worker/schedule")->with([
 			"schedule_list" => $schedule_list,
+            "default_date" => $default_date,
         ]);
     }
 	
     public function edit_schedule(Request $request){
-
         if( $request->input("id") == ""){
             return redirect("worker/schedule");
         }
-		
 		$id = $request->input("id");
-
 		if( $request->input("action") == "更新" ) {
-			
 			$start_time = $request->input("start_time");
 			$end_time = $request->input("end_time");
 			$condition = $request->input("condition");
 			$bikou = $request->input("bikou");
-
-			DB::table('schedules')->where("id",$id)->update([
+			DB::table('schedules')->where("id", $id)->update([
                 'start_time' => $start_time,
 				'end_time' => $end_time,
 				'condition' => $condition,
 				'bikou' => $bikou,
             ]);
+			return redirect("worker/schedule");
 		}
 		
-		$schedule_list = DB::table("schedules")->where("worker_id", $worker_id)->get();
-
-        return view("worker/schedule")->with([
-			"schedule_list" => $schedule_list,
+		$schedule_list = DB::table("schedules")->where("id", $id)->get();
+		$now_schedule = $schedule_list[0];
+        return view("worker/edit_schedule")->with([
+            "schedule" => $now_schedule,
         ]);
     }
 	
     public function list_review(Request $request){
-		
 		$worker_id = Auth::id();
-		
-        $review_list = DB::table("reviews")->where("worker_id", $worker_id)->get();
-		
+        $review_list = DB::table("reviews")->where("worker_id", $worker_id)
+                            ->orderByDesc("created_at")->get();
         return view("worker/list_review")->with([
-            "review_list" => $review_list
+            "review_list" => $review_list,
+            "line_no" => 0,
         ]);
     }
 	
     public function view_karte(Request $request){
-
         if( $request->input("user_id") == ""){
             return redirect("worker/list_order");
         }
-
         $user_id = $request->input("user_id");
         $now_karte = DB::table("karte")->where("user_id", $user_id)->get();
-
         // 該当するユーザーがいなかったらリダイレクト
         if($now_karte == null){
             return redirect("worker/list_order");
         }
-		
 		$karte = $now_karte[0];
-		
         return view("worker/view_karte")->with([
             "karte" => $karte,
         ]);
     }
 	
     public function create_karte(Request $request){
-
         if( $request->input("user_id") == ""){
             return redirect("worker/list_order");
         }
-
         $user_id = $request->input("user_id");
 		$worker_id = Auth::id();
         $now_karte = DB::table("karte")->where("user_id", $user_id)->get();

@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Applicant;
-
 use Illuminate\Support\Facades\Auth;
-
 use Session;
-
 use Illuminate\Http\Request;
 
 class UserController extends Controller
