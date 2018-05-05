@@ -106,7 +106,6 @@ class WorkerController extends Controller
 	public function worker_editfinish(Request $request){
 	    return view("worker/worker_editfinish");
 	}
-
     public function list_order(Request $request){
         $worker_id = Auth::id();
         $order_list = DB::table("orders")->where("worker_id", $worker_id)->paginate(10);
@@ -140,7 +139,6 @@ class WorkerController extends Controller
 			$now_order = DB::table("orders")->where("id", $order_id)->get();
 			$order = $now_order[0];
 		}
-		
 		if( $request->input("action") == "送信" ) {
 			$content = $request->input("content");
 			DB::table('talks')->insert([

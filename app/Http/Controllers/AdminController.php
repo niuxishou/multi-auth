@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\UserInfo;
 use App\Admin;
@@ -11,8 +12,6 @@ use App\Worker;
 use App\WorkerInfo;
 use App\Order;
 use App\PointPurchase;
-
-use \Illuminate\Support\Facades\Validator;
 use App\Applicant;
 
 use Illuminate\Http\Request;
@@ -1141,7 +1140,7 @@ class AdminController extends Controller
 				'address_1' => 'required',
 				'address_2' => 'required',
 				'email' => 'required | email',
-			    'gender' => 'require',
+			    'gender' => 'required',
 				'tel' => 'required | digits_between:10,14',
 				'points' => 'required',
 			];
@@ -1195,6 +1194,7 @@ class AdminController extends Controller
 			} else {
 				$address_3 = $request->input('address_3');
 			}
+			$gender = $request->input('gender');
 			$email = $request->input('email');
 			$tel = $request->input('tel');
 			$points = $request->input('points');
@@ -1209,6 +1209,7 @@ class AdminController extends Controller
                     'address_1' => $address_1,
                     'address_2' => $address_2,
 					'address_3' => $address_3,
+                    'gender' => $gender,
 					'email' => $email,
                     'tel' => $tel,
 					'points' => $points,

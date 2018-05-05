@@ -149,10 +149,10 @@
         <div class="card">
                <nav>
                	<ul>
-					<li><a href="edit_user">登録情報編集</a></li>
-					<li class="bold">依頼一覧</a></li>
-               		<li><a href="point_history">ポイント履歴</a></li>
-			        <li><a href="point_purchase">ポイント購入</a></li>
+		<li><a href="edit_user">登録情報編集</a></li>
+		<li class="bold">依頼一覧</a></li>
+               	<li><a href="point_history">ポイント履歴</a></li>
+		<li><a href="point_purchase">ポイント購入</a></li>
                	</ul>
                </nav>           
            
@@ -162,7 +162,7 @@
                 <table id="account_list" class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="row1">ID</th>
+                        <th class="row1"></th>
                         <th class="row3">担当スタイリスト名</th>
                         <th class="row4">依頼内容</th>
                         <th class="row5">使用ポイント</th>

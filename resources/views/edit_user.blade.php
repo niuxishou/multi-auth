@@ -154,7 +154,6 @@
                 </div>
             @endif
 		</div>
-
             <div class="card">
                <nav>
                	<ul>
@@ -164,14 +163,22 @@
                		<li><a href="point_purchase">ポイント購入</a></li>
                	</ul>
                </nav>
-               
                 <div class="card-header">登録情報の閲覧・編集</div>
                 <div class="card-body">
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
                     <form method="POST" action="/edit_user" accept-charset="UTF-8">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">お名前</div>
+                            <div class="form-layout-title form-style-required">お名前<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-4 col-md-4">
                             <input class="form-field" placeholder="姓" type="text" value="{{ $user->name_1 }}" name="name_1" id="name_1" />
@@ -182,7 +189,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">フリガナ</div>
+                            <div class="form-layout-title form-style-required">フリガナ<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-4 col-md-4">
                             <input class="form-field" placeholder="セイ" type="text" value="{{ $user->name_kana_1 }}" name="name_kana_1" id="name_kana_1" />
@@ -201,7 +208,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">住所（都道府県）</div>
+                            <div class="form-layout-title form-style-required">住所（都道府県）<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-9 col-md-9">
                             <input class="form-field" type="text" value="{{ $user->pref }}" name="pref" id="pref" />
@@ -209,7 +216,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">住所（市区町村）</div>
+                            <div class="form-layout-title form-style-required">住所（市区町村）<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-9 col-md-9">
                             <input class="form-field" type="text" value="{{ $user->address_1 }}" name="address_1" id="address_1" />
@@ -217,7 +224,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">住所（番地）</div>
+                            <div class="form-layout-title form-style-required">住所（番地）<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-9 col-md-9">
                             <input class="form-field" type="text" value="{{ $user->address_2 }}" name="address_2" id="address_2" />
@@ -233,6 +240,15 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
+                            <div class="form-layout-title form-style-required">性別<span class="hissu">※</span></div>
+                        </div>
+                        <div class="col-sm-4 col-md-4">
+                        	<input type="radio" name="gender" value="男性" @if($user->gender=='男性') checked @endif>男性
+                           	<input type="radio" name="gender" value="女性" @if($user->gender=='女性') checked @endif>女性
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3 col-md-3">
                             <div class="form-layout-title">生年月日</div>
                         </div>
                         <div class="col-sm-6 col-md-6">
@@ -241,7 +257,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">メールアドレス</div>
+                            <div class="form-layout-title form-style-required">メールアドレス<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-9 col-md-9">
                             <input class="form-field" type="text" value="{{ $user->email }}" name="email" id="email" />
@@ -249,7 +265,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
-                            <div class="form-layout-title form-style-required">電話番号</div>
+                            <div class="form-layout-title form-style-required">電話番号<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-9 col-md-9">
                             <input class="form-field" type="text" value="{{ $user->tel }}" name="tel" id="tel" />

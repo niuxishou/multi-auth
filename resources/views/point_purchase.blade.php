@@ -155,17 +155,15 @@
                 </div>
             @endif
 		</div>
-
             <div class="card">
                <nav>
                	<ul>
-					<li><a href="edit_user">登録情報編集</a></li>
-					<li><a href="list_order">依頼一覧</a></li>
-               		<li><a href="point_history">ポイント履歴</a></li>
+               		<li><a href="{{ url('/edit_user') }}">登録情報編集</a></li>
+					<li><a href="{{ url('/list_order') }}">依頼一覧</a></li>
+					<li><a href="{{ url('/point_history') }}">ポイント履歴</a></li>
                		<li class="bold">ポイント購入</li>
                	</ul>
                </nav>
-               
                 <div class="card-header">ポイント購入</div>
                 <div class="card-body">
                   <p>レギュラーランクの方は5%、ブロンズランクの方は10%を追加で贈呈いたします。</p>
@@ -178,7 +176,7 @@
                     <input type="radio" name="points" value="2000">2000ポイント<span class="left5">20,000円相当</span><br>
                     <input type="radio" name="points" value="3000">3000ポイント<span class="left5">30,000円相当</span><br>
 			        <center><input name="action" id="submit_button" class="btn btn-success" type="submit" value="次へ"></center>	  
-           </form>
+           		</form>
             </div>
         </div>
     </body>

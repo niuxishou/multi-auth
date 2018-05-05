@@ -2012,3 +2012,4 @@ Stack trace:
 #2 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleException(Object(Symfony\Component\Debug\Exception\FatalThrowableError))
 #3 {main}
   thrown in /home/vagrant/room-salon/app/Exceptions/Handler.php on line 63
+[03-May-2018 02:23:20 Asia/Tokyo] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/vagrant/room-salon/app/Http/Controllers/UserController.php on line 54

@@ -54,11 +54,12 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/edit_user', 'UserController@edit_user');
 Route::post('/edit_user', 'UserController@edit_user');
 Route::get('/edit_finish', 'UserController@edit_finish');
-Route::get('/order_stylist', 'OrderStylistController@order');
-Route::post('/order_stylist', 'OrderStylistController@order');
 Route::get('/list_order', 'UserController@list_order');
 Route::get('/view_order', 'UserController@view_order');
 Route::post('/view_order', 'UserController@view_order');
+Route::get('/create_review', 'CreateReviewController@create_review');
+Route::post('/create_review', 'CreateReviewController@create_review');
+
 Route::get('/point_history', 'UserController@point_history');
 Route::get('/point_purchase', 'UserController@point_purchase');
 Route::post('/point_purchase', 'UserController@point_purchase');
@@ -68,8 +69,9 @@ Route::get('/bank_payment', 'UserController@bank_payment');
 Route::post('/bank_payment', 'UserController@bank_payment');
 Route::get('/credit_payment', 'UserController@credit_payment');
 Route::post('/credit_payment', 'UserController@credit_payment');
-Route::get('/create_review', 'CreateReviewController@create_review');
-Route::post('/create_review', 'CreateReviewController@create_review');
+
+Route::get('/order_stylist', 'OrderStylistController@order');
+Route::post('/order_stylist', 'OrderStylistController@order');
 
     //Route::get('admin/register', 'Admin\LoginController@getRegister');
     //Route::post('admin/register', 'Admin\LoginController@postRegister');

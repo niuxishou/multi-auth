@@ -14,16 +14,17 @@
         
         <!-- JavaScripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="../jquery.raty.js"></script>
+        <script type="text/javascript" src="../jquery.raty.css"></script>
 
         <!-- Styles -->
         <style>
 			
-			@font-face {
+	       @font-face {
                font-family: "Yu Gothic";
                src: local("Yu Gothic Medium");
                font-weight: 400;
             }
-			
             html, body {
                 background-color: #fff;
                 color: #636b6f;
@@ -31,46 +32,31 @@
                 font-weight: 100;
                 margin: 0;
             }
-			
-			a:hover{
-				opacity:0.7;
-			}
-
+    	    a:hover{
+    	    	opacity:0.7;
+    	    }
             .flex-center {
                 align-items: center;
                 display: flex;
                 justify-content: center;
             }
-
             .position-ref {
                 position: relative;
             }
-
             .top-right {
                 position: absolute;
                 right: 10px;
                 top: 18px;
             }
-			.full-height{
-				height:60px;
-			}
-			
-			.card{
-				width:90%;
-				margin: 0 auto;
-			}
-			.card-body{
-				font-size:13px;
-			}
-
+    	    .full-height{
+    	    	height:60px;
+    	    }
             .content {
                 text-align: center;
             }
-
             .title {
                 font-size: 84px;
             }
-
             .links > a {
                 color: #636b6f;
                 padding: 0 25px;
@@ -80,24 +66,42 @@
                 text-decoration: none;
                 text-transform: uppercase;
             }
-
             .m-b-md {
                 margin-bottom: 30px;
             }
-			
 			nav{
 				font-size: 14px;
 			}
 			.card{
 				border: none;
+				width:95%;
+				max-width: 960px;
+				margin:0 auto;
+			}
+			.card-header{
+				background-color: #FFF;
+				font-size:20px;
+				text-align: center;
+			}			
+			.card-body{
+				font-size: 13px;
+			}			
+			.card nav{
+				width:100%;
+				margin: 0 auto;
+				text-align: center;
+			}
+			.card nav li {
+				font-size:13px;
+				display: inline;
+				margin:0 5%;
 			}
 			.form-field{
 				width:100%;
 			}
 			.form-group{
-				padding:15px 0 30px;
+				padding:15px 0 40px;
 			}
-			
 			.conversation{
 				width:90%;
 				margin:0 auto;
@@ -126,30 +130,9 @@
 			ul{
 				padding:0;
 			}
-			
-			.card{
-				border: none;
-				width:95%;
-				max-width: 960px;
-				margin:0 auto;
-			}
-			.card-header{
-				background-color: #FFF;
-				font-size:20px;
-				text-align: center;
-			}
-			.card-body{
-				font-size: 13px;
-			}
-			.card nav{
-				width:100%;
-				margin: 0 auto;
-				text-align: center;
-			}
-			.card li {
-				font-size:13px;
-				display: inline;
-				margin:0 5%;
+			ul li{
+				list-style: none;
+				padding-left:0;
 			}
         </style>
     </head>
@@ -162,22 +145,19 @@
                 </div>
             @endif
 		</div>
-        
-        
-
         <div class="card">
+            <nav>
+            <ul>
+                <li><a href="{{ url('/edit_user') }}">登録情報編集</a></li>
+                <li><a href="{{ url('/list_order') }}">依頼一覧</a></li>
+                <li><a href="{{ url('/point_history') }}">ポイント履歴</a></li>
+                <li><a href="{{ url('/point_purchase') }}">ポイント購入</a></li>
+            </ul>
+            </nav>           
            
-               <nav>
-               	<ul>
-					<li><a href="edit_user">登録情報編集</a></li>
-					<li><a href="list_order">依頼一覧</a></li>
-               		<li><a href="point_history">ポイント履歴</a></li>
-					<li><a href="point_purchase">ポイント購入</a></li>
-               	</ul>
-               </nav>           
-           
-            <h3 class="bold" style="font-size:25px;text-align: center;">{{ $order->worker_name }}さんのレビューを投稿</h3>
-            <div class="card-body">
+            <div class="card-header">{{ $order->worker_name }}さんのレビューを投稿</div>
+	    <div class="card-body">
+	    	<p style="font-size: 15px; color:#C92629;">{{ $msg }}</p>
                   <form method="POST" action="create_review/?order_id={{ $order->id }}" accept-charset="UTF-8">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -190,7 +170,9 @@
                             <script type="text/javascript">
 								$.fn.raty.defaults.path = "../images";
 								$('#star').raty({
-                                    target : '#rate'
+                                	click: function(score, evt) {
+              						  $("#rate").val(score);
+              					    }    
                                 });
 							</script>
                         </div>
@@ -204,8 +186,10 @@
                             <textarea name="content" id="content"></textarea>
                         </div>
                     </div>
-                    <center><input name="action" id="submit_button" type="submit" value="送信"></center>
-			        </form>
+                    <div class="form-group center">
+						<center><input name="action" id="submit_button" class="btn btn-success" type="submit" value="送信"></center>
+                    </div>
+			    </form>
             </div>
         </div>
     </body>

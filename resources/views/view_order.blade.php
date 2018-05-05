@@ -18,7 +18,7 @@
         <!-- Styles -->
         <style>
 			
-			@font-face {
+	    @font-face {
                font-family: "Yu Gothic";
                src: local("Yu Gothic Medium");
                font-weight: 400;
@@ -32,9 +32,9 @@
                 margin: 0;
             }
 			
-			a:hover{
-				opacity:0.7;
-			}
+	    a:hover{
+	    	opacity:0.7;
+	    }
 
             .flex-center {
                 align-items: center;
@@ -51,18 +51,9 @@
                 right: 10px;
                 top: 18px;
             }
-			.full-height{
-				height:60px;
-			}
-			
-			.card{
-				width:90%;
-				margin: 0 auto;
-			}
-			.card-body{
-				font-size:13px;
-			}
-
+	    .full-height{
+	    	height:60px;
+	    }
             .content {
                 text-align: center;
             }
@@ -90,6 +81,27 @@
 			}
 			.card{
 				border: none;
+				width:95%;
+				max-width: 960px;
+				margin:0 auto;
+			}
+			.card-header{
+				background-color: #FFF;
+				font-size:20px;
+				text-align: center;
+			}			
+			.card-body{
+				font-size: 13px;
+			}			
+			.card nav{
+				width:100%;
+				margin: 0 auto;
+				text-align: center;
+			}
+			.card nav li {
+				font-size:13px;
+				display: inline;
+				margin:0 5%;
 			}
 			.form-field{
 				width:100%;
@@ -126,17 +138,34 @@
 			ul{
 				padding:0;
 			}
+			ul li{
+				list-style: none;
+				padding-left:0;
+			}
+			
         </style>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
+            @if (Route::has('login'))
                 <div class="top-right links">
+                        <a href="{{ url('/home') }}">マイページ</a>
                         <a href="{{ url('/logout') }}">ログアウト</a>
                 </div>
+            @endif
 		</div>
 
         <div class="card">
-            <h3 class="bold" style="font-size:25px;text-align: center;">依頼の詳細</h3>
+            <nav>
+            <ul>
+                <li><a href="{{ url('/edit_user') }}">登録情報編集</a></li>
+                <li><a href="{{ url('/list_order') }}">依頼一覧</a></li>
+                <li><a href="{{ url('/point_history') }}">ポイント履歴</a></li>
+                <li><a href="{{ url('/point_purchase') }}">ポイント購入</a></li>
+            </ul>
+            </nav>           
+           
+            <div class="card-header">依頼の詳細</div>
             <div class="card-body">
                     <div class="form-group">
                         <div class="col-sm-3 col-md-3">
@@ -161,14 +190,12 @@
                             <div class="form-layout-title form-style-required">依頼内容</div>
                         </div>
                         <div class="col-sm-9 col-md-9">
-                            <ul>
-                            @if ($order->content_1 != "")<li>{{$order->content_1}}</li>@endif
-                            @if ($order->content_2 != "")<li>{{$order->content_2}}</li>@endif
-                            @if ($order->content_3 != "")<li>{{$order->content_3}}</li>@endif
-                            @if ($order->content_4 != "")<li>{{$order->content_4}}</li>@endif
-                            @if ($order->content_5 != "")<li>{{$order->content_5}}</li>@endif
-                            @if ($order->content_6 != "")<li>{{$order->content_6}}</li>@endif
-                            </ul>
+                            @if ($order->content_1 != "") {{$order->content_1}} / @endif
+                            @if ($order->content_2 != "") {{$order->content_2}} / @endif
+                            @if ($order->content_3 != "") {{$order->content_3}} / @endif
+                            @if ($order->content_4 != "") {{$order->content_4}} / @endif
+                            @if ($order->content_5 != "") {{$order->content_5}} / @endif
+                            @if ($order->content_6 != "") {{$order->content_6}}   @endif
                         </div>
                     </div>
                     <hr>
@@ -177,7 +204,7 @@
                             <div class="form-layout-title form-style-required">依頼の状況</div>
                         </div>
                         <div class="col-sm-9 col-md-9">
-                            {{ $order->status }}&nbsp; @if ($order->status == "完了")<a href="create_review?order_id={{ $order-> id }}">レビューを投稿する</a>@endif
+                            {{ $order->status }}&nbsp; @if ($order->status == "完了")<a href="create_review?order_id={{ $order->id }}">レビューを投稿する</a>@endif
                         </div>
                     </div>
                     <hr>
@@ -196,9 +223,11 @@
                     <br>
                     <form method="post" action="/view_order?order_id={{ $order->id }}">
                      {{ csrf_field() }}
-					<textarea name="content" id="content"></textarea>
-                    <center><input name="action" id="submit_button" type="submit" value="送信"></center>
-			        </form>
+		     <textarea name="content" id="content"></textarea>
+		     <div class="form-group center">
+                    	<center><input name="action" id="submit_button" class="btn btn-success" type="submit" value="送信"></center>
+		     </div>			        
+		    </form>
             </div>
         </div>
     </body>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use \Illuminate\Support\Facades\Validator;
 use App\Applicant;
 use Illuminate\Support\Facades\Auth;
 use Session;
@@ -16,32 +17,57 @@ class UserController extends Controller
     }
 	
     public function edit_user(Request $request){
-		
 		$user_id = Auth::id();
-        $now_user = DB::table("user_info")->where("user_id", $user_id)->get();
-
-        // 該当するユーザーがいなかったらリダイレクト
-        if($now_user == null){
-            return redirect("home");
-        }
-		
-		$user = $now_user[0];
-		
-		$aname = preg_split("/[\s,]+/", $user->name);
-		$user->name_1 = $aname[0];
-        $user->name_2 = $aname[1];
-		
-		$aname_kana = preg_split("/[\s,]+/", $user->name_kana);
-		$user->name_kana_1 = $aname_kana[0];
-        $user->name_kana_2 = $aname_kana[1];
-		
-		$abirthday = preg_split("/[\-\/\s:]+/", $user->birthday);
-        $user->birthday_1 = $abirthday[0];
-        $user->birthday_2 = $abirthday[1];
-        $user->birthday_3 = $abirthday[2];
-		
 		if( $request->input("action") == "更新" ) {
-			
+		    $rules = [
+		        'name_1' => 'required',
+		        'name_2' => 'required',
+		        'name_kana_1' => 'required',
+		        'name_kana_2' => 'required',
+		        'post' => 'required | digits:7',
+		        'pref' => 'required',
+		        'address_1' => 'required',
+		        'address_2' => 'required',
+		        'gender' => 'required',
+		        'email' => 'required | email',
+		        'tel' => 'required | digits_between:10,14',
+		    ];
+		    $messages = [
+		        'name_1.required' => '名前（姓）は必ず入力してください。',
+		        'name_2.required' => '名前（名）は必ず入力してください。',
+		        'name_kana_1.required' => 'フリガナ（姓）は必ず入力してください。',
+		        'name_kana_2.required' => 'フリガナ（名）は必ず入力してください。',
+		        'post.required' => '郵便番号は必ず入力してください。',
+		        'post.digits' => '郵便番号は必ず7桁の半角数字で入力してください。',
+		        'pref.required' => '都道府県は必ず入力してください。',
+		        'address_1.required' => '市区町村は必ず入力してください。',
+		        'address_2.required' => '番地は必ず入力してください。',
+		        'gender.required' => '性別は必ず入力してください。',
+		        'email.required' => 'メールアドレスは必ず入力してください。',
+		        'email.email' => 'メールアドレスを正しく入力してください。',
+		        'tel.required' => '電話番号は必ず入力してください。',
+		        'tel.digits_between' => '電話番号を半角数字で正しく入力してください。',
+		    ];
+		    
+		    $validator = Validator::make($request->all(), $rules, $messages);
+		    $email = $request->input("email");
+		    $email_exists = false;
+		    if (!$validator->errors()->has('email')) {
+		        $email_cnt = DB::table('user_info')->where('email',  $email)
+		        ->where('user_id', '<>', $user_id)
+		        ->count();
+		        if ($email_cnt > 0) {
+		            $msg = "該当emailは他人より使われています。";
+		            $validator->errors()->add('email', $msg);
+		            $email_exists = true;
+		        }
+		    }
+		    $errors = $validator->errors();
+		    $request->flash();
+		    if($validator->fails() || $email_exists) {
+		        return redirect()->to("edit_user")->withErrors($errors)->withInput();
+		    }
+		    
 			$name = $request->input('name_1') . "\t" . $request->input('name_2');
 			$name_kana = $request->input('name_kana_1') . "\t" . $request->input('name_kana_2');
 			$post = $request->input('post');
@@ -53,6 +79,7 @@ class UserController extends Controller
 			} else {
 				$address_3 = "";
 			}
+			$gender = $request->input('gender');
 			$email = $request->input('email');
 			$tel = $request->input('tel');
 			$date = date("Y/m/d H:i:s");
@@ -62,7 +89,6 @@ class UserController extends Controller
 				'name' => $name,
 				'email' => $email,
 			]);
-			
             DB::table('user_info')->where("user_id",$user_id)
 				->update([
                 'name' => $name,
@@ -72,15 +98,33 @@ class UserController extends Controller
                 'address_1' => $address_1,
 				'address_2' => $address_2,
 				'address_3' => $address_3,
+				'gender' => $gender,
 				'email' => $email,
                 'tel' => $tel,
                 'created_at' => $date,
                 'updated_at' => $date,
             ]);
-			
 			return redirect("edit_finish");
 		}
+		$now_user = DB::table("user_info")->where("user_id", $user_id)->get();
+		// 該当するユーザーがいなかったらリダイレクト
+		if($now_user == null){
+		    return redirect("home");
+		}
+		$user = $now_user[0];
 		
+		$aname = preg_split("/[\s,]+/", $user->name);
+		$user->name_1 = $aname[0];
+		$user->name_2 = $aname[1];
+		
+		$aname_kana = preg_split("/[\s,]+/", $user->name_kana);
+		$user->name_kana_1 = $aname_kana[0];
+		$user->name_kana_2 = $aname_kana[1];
+		
+		$abirthday = preg_split("/[\-\/\s:]+/", $user->birthday);
+		$user->birthday_1 = $abirthday[0];
+		$user->birthday_2 = $abirthday[1];
+		$user->birthday_3 = $abirthday[2];
         return view("edit_user")->with([
             "user" => $user
         ]);
@@ -91,44 +135,32 @@ class UserController extends Controller
 	}
 	
     public function list_order(Request $request){
-
-        $now_order_list = DB::table("orders")->where("user_id", Auth::id())->get();
-
-        $order_list = [];
-        foreach($now_order_list as $now){
-             $order_list[] = $now;
-        }
-
+        $user_id = Auth::id();
+        $order_list = DB::table("orders")->where("user_id", $user_id)->get();
         return view("list_order")->with([
             "order_list" => $order_list
         ]);
     }
 	
     public function view_order(Request $request){
-
         if( $request->input("order_id") == ""){
             return redirect("list_order");
         }
-
         $order_id = $request->input("order_id");
-		$user_id = Auth::id();
         $now_order = DB::table("orders")->where("id", $order_id)->get();
-
         // 該当するユーザーがいなかったらリダイレクト
         if($now_order == null){
             return redirect("/list_order");
         }
-		
-		$order = $now_order[0];
+        $order = $now_order[0];
+
+        $user_id = Auth::id();
 		$worker_id = $order->worker_id;
 		$name = $order->user_name;
 		$date = date("Y/m/d H:i:s");
-		$conv_list = DB::table("talks")->where("order_id", $order_id)->get();
 		
 		if( $request->input("action") == "送信" ) {
-			
 			$content = $request->input("content");
-
 			DB::table('talks')->insert([
                 'order_id' => $order_id,
                 'user_id' => $user_id,
@@ -138,66 +170,48 @@ class UserController extends Controller
 				'content' => $content,
             ]);
 		}
-		
-        return view("view_order")->with([
+		$conv_list = DB::table("talks")->where("order_id", $order_id)->get();
+		return view("view_order")->with([
             "order" => $order,
 			"conv_list" => $conv_list,
         ]);
     }
 	
+    public function point_history(Request $request){
+        return view("point_history");
+    }
+    
     public function point_purchase(Request $request){
-		
-		if( $request->input("action") == "次へ" ) {
-			return redirect("select_payment");
-		}
-
+// 		if( $request->input("action") == "次へ" ) {
+// 			return redirect("select_payment");
+// 		}
         return view("point_purchase");
     }
 	
-    public function point_history(Request $request){
-		
-		return view("point_history");
-		
-	}	
-	
-    public function select_payment(Request $request){
-		
-		$data = $request->all();
-
-        return view("select_payment")->with($data);
-		
-	}
-	
-	public function post_payment(Request $request){
-		
-		$points = $request->input("points");
-		
-		$user_id = Auth::id();
-		$now_name = DB::table("user_info")->where("user_id", $user_id)->get();
-		$name = $now_name[0];
-		
-		$date = date("Y/m/d H:i:s");		
-		
-		$data = $request->all();
-
+    public function post_payment(Request $request){
+        $points = $request->input("points");
+        $user_id = Auth::id();
+        $now_name = DB::table("user_info")->where("user_id", $user_id)->get();
+        $name = $now_name[0];
+        $date = date("Y/m/d H:i:s");
+        $data = $request->all();
         return view("select_payment")->with($data);
     }
+    
+    public function select_payment(Request $request){
+		$data = $request->all();
+        return view("select_payment")->with($data);
+	}
 	
     public function bank_payment(Request $request){
-		
 		$points = $request->input("points");
-		
 		$user_id = Auth::id();
 		$now_name = DB::table("user_info")->where("user_id", $user_id)->get();
 		$name = $now_name[0]->name;
-		
 		$date = date("Y/m/d");
-		
 		if( $request->input("action") == "銀行振込" ) {
-			
 			$way = "銀行振込";
 			$status = "振込待ち";
-
 			DB::table('point_purchases')->insert([
                 'user_id' => $user_id,
 				'name' => $name,
@@ -206,28 +220,20 @@ class UserController extends Controller
 				'way'  => $way,
 				'status' => $status,
             ]);
-			
 		}
-		
 		return view("bank_payment");
     }
 	
     public function credit_payment(Request $request){
-		
 		$points = $request->input("points");
-		
 		$user_id = Auth::id();
 		$now_name = DB::table("user_info")->where("user_id", $user_id)->get();
 		$name = $now_name[0]->name;
-		
 		$date = date("Y/m/d");		
-		
 		if( $request->input("action") == "クレジットカード決済" ) {
-			
 			$points = $request->input("points");
 			$way = "カード決済";
 			$status = "未確認";
-
 			DB::table('point_purchases')->insert([
                 'user_id' => $user_id,
 				'name' => $name,

@@ -158,7 +158,6 @@
                 </div>
             @endif
 		</div>
-
             <div class="card">
                <nav>
                	<ul>

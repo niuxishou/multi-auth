@@ -194,7 +194,7 @@
             <div class="card">
                 <div class="card-header bold" style="font-size:25px;">{{ $user->name }}さんの登録情報を編集</div>
                 <div class="card-body">
-                @if (count($errors) > 0)
+@if (count($errors) > 0)
     <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
@@ -279,7 +279,8 @@
                             <div class="form-layout-title form-style-required">性別<span class="hissu">※</span></div>
                         </div>
                         <div class="col-sm-4 col-md-4">
-                            {{ $user->gender }}
+                        	<input type="radio" name="gender" value="男性" @if($user->gender=='男性') checked @endif>男性
+                           	<input type="radio" name="gender" value="女性" @if($user->gender=='女性') checked @endif>女性
                         </div>
                     </div>
                     <hr>

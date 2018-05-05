@@ -163,9 +163,9 @@
             <div class="card">
                <nav>
                	<ul>
-					<li><a href="edit_user">登録情報編集</a></li>
-					<li><a href="list_order">依頼一覧</a></li>
-               		<li><a href="point_history">ポイント履歴</a></li>
+               		<li><a href="{{ url('/edit_user') }}">登録情報編集</a></li>
+					<li><a href="{{ url('/list_order') }}">依頼一覧</a></li>
+					<li><a href="{{ url('/point_history') }}">ポイント履歴</a></li>
                		<li class="bold">ポイント購入</li>
                	</ul>
                </nav>
