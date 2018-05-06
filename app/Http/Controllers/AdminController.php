@@ -1373,30 +1373,38 @@ class AdminController extends Controller
     }
 
     public function list_pointpay(Request $request){
-
-		$point_list = DB::table("point_purchases")->paginate(10);
-
-        if($request->input('action') == "決済完了"){
+        $point_list = DB::table("point_purchases")->paginate(10);
+        
+		if($request->input('action') == "決済"){
+			$id = $request->input('id');
 			$user_id = $request->input('user_id');
 			$now_user =  DB::table('user_info')->where("user_id", $user_id)->get();
 			if($now_user == null){
                 return redirect("/admin/list_pointpay");
             }
-			$now_points = DB::table("point_purchases")->where("user_id", $user_id)->get();
-			$new_points = $now_points[0]->buy_points;
+			$now_points = DB::table("point_purchases")->where("id", $id)
+             ->where("status", "未付与")
+             ->get();
+            if($now_points == null){
+                 return redirect("/admin/list_pointpay");
+            }
+			$buy_points = 0;
+            foreach($now_points as $rec){
+                $buy_points = $buy_points + $rec->buy_points;
+            }
 			$user = $now_user[0];
 			$old_points = $user->points;
-
-			$points = $new_points + $old_points;
-
+			$points = $buy_points + $old_points;
+			$date = date("Y/m/d H:i:s");
             DB::table('point_purchases')->where("user_id", $user_id)
                 ->update([
                     'status' => "付与完了",
+                    'updated' => $date, 
                 ]);
-
             DB::table('user_info')->where("user_id", $user_id)
                 ->update([
                     'points' => $points,
+                    'updated' => $date, 
                 ]);
 		}
 		$name = "";
@@ -1409,17 +1417,17 @@ class AdminController extends Controller
 			if(!empty($search1)) {
                $query->where('name', 'like', '%'.$search1.'%');
             }
-               $point_list = $query->paginate(10);
-			   $num = $query->count();
+            $point_list = $query->paginate(10);
+            $num = $query->count();
+            
+            if($num==0 && $request->input('page')<2){
+               $msg = "検索結果が0件でした。";
+            } else {
+               $msg = "";
+            }
+		}
 
-			   if($num==0 && $request->input('page')<2){
-				   $msg = "検索結果が0件でした。";
-			   } else {
-				   $msg = "";
-			   }
-		    }
-
-        return view("admin/list_pointpay")->with([
+		return view("admin/list_pointpay")->with([
             "point_list" => $point_list,
 			"name" => $name,
 			"msg" => $msg,

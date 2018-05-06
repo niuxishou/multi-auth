@@ -166,22 +166,27 @@
                </nav>
                 <div class="card-header">ポイント履歴</div>
                 <div class="card-body">
-                 <table id="account_list" class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th class="row1">ポイント加算・減算日</th>
-                        <th class="row3">内容</th>
-                        <th class="row4">ポイント増減</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                	<p style="font-size: 15px; color:#C92629;">{{ $msg }}</p>
+                	@if($msg=="")
+                     <table id="account_list" class="table table-striped">
+                        <thead>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th class="row1">ポイント加算・減算日</th>
+                            <th class="row3">内容</th>
+                            <th class="row4">ポイント増減</th>
                         </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach ($point_list as $point)
+                            <tr>
+                                <td>{{ $point->updated_at }}</td>
+                                <td>{{ $point->pay_way }}</td>
+                                <td>{{ $point->buy_points }}</td>
+                            </tr>
+                        @endforeach    
+                        </tbody>
+                    </table>
+                   @endif
             </div>
         </div>
     </body>

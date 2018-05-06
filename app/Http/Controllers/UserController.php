@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use \Illuminate\Support\Facades\Validator;
-use App\Applicant;
 use Illuminate\Support\Facades\Auth;
-use Session;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -178,7 +176,23 @@ class UserController extends Controller
     }
 	
     public function point_history(Request $request){
-        return view("point_history");
+        $user_id = Auth::id();
+        $point_list = DB::table("point_purchases")
+        ->where("user_id", $user_id)
+        ->where("status", "付与完了")
+        ->orderBy("updated_at", "desc")
+        ->get();
+        
+        $num = $point_list->count();
+        if($num==0){
+            $msg = "検索結果が0件でした。";
+        } else {
+            $msg = "";
+        }
+        return view("point_history")->with([
+            "point_list" => $point_list,
+            "msg" => $msg,
+        ]);
     }
     
     public function point_purchase(Request $request){
@@ -188,15 +202,15 @@ class UserController extends Controller
         return view("point_purchase");
     }
 	
-    public function post_payment(Request $request){
-        $points = $request->input("points");
-        $user_id = Auth::id();
-        $now_name = DB::table("user_info")->where("user_id", $user_id)->get();
-        $name = $now_name[0];
-        $date = date("Y/m/d H:i:s");
-        $data = $request->all();
-        return view("select_payment")->with($data);
-    }
+//     public function post_payment(Request $request){
+//         $points = $request->input("points");
+//         $user_id = Auth::id();
+//         $now_name = DB::table("user_info")->where("user_id", $user_id)->get();
+//         $name = $now_name[0];
+//         $date = date("Y/m/d H:i:s");
+//         $data = $request->all();
+//         return view("select_payment")->with($data);
+//     }
     
     public function select_payment(Request $request){
 		$data = $request->all();
@@ -208,17 +222,18 @@ class UserController extends Controller
 		$user_id = Auth::id();
 		$now_name = DB::table("user_info")->where("user_id", $user_id)->get();
 		$name = $now_name[0]->name;
-		$date = date("Y/m/d");
+		$date = date("Y/m/d H:i:s");
 		if( $request->input("action") == "銀行振込" ) {
 			$way = "銀行振込";
 			$status = "振込待ち";
 			DB::table('point_purchases')->insert([
                 'user_id' => $user_id,
 				'name' => $name,
-				'date' => $date,
-				'points' => $points,
-				'way'  => $way,
+				'request_date' => $date,
+				'buy_points' => $points,
+				'pay_way'  => $way,
 				'status' => $status,
+			    'created_at' => $date,
             ]);
 		}
 		return view("bank_payment");
@@ -229,18 +244,18 @@ class UserController extends Controller
 		$user_id = Auth::id();
 		$now_name = DB::table("user_info")->where("user_id", $user_id)->get();
 		$name = $now_name[0]->name;
-		$date = date("Y/m/d");		
+		$date = date("Y/m/d H:i:s");
 		if( $request->input("action") == "クレジットカード決済" ) {
-			$points = $request->input("points");
 			$way = "カード決済";
 			$status = "未確認";
 			DB::table('point_purchases')->insert([
-                'user_id' => $user_id,
-				'name' => $name,
-				'date' => $date,
-				'points' => $points,
-				'way'  => $way,
-				'status' => $status,
+			    'user_id' => $user_id,
+			    'name' => $name,
+			    'request_date' => $date,
+			    'buy_points' => $points,
+			    'pay_way'  => $way,
+			    'status' => $status,
+			    'created_at' => $date,
             ]);
 			
 		}

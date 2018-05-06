@@ -208,7 +208,7 @@
                     <tbody>
                     @foreach ($point_list as $point)
                         <tr>
-                            <td>{{$point->name}}</a></td>
+                            <td>{{$point->name}}</td>
                             <td>{{$point->buy_points}}</td>
                             <td>{{$point->pay_way}}</td>
                             <td>{{$point->request_date}}</td>
@@ -216,8 +216,9 @@
                             <td>
                             	<form method="POST" action="/admin/list_pointpay" accept-charset="UTF-8">
                                  {{ csrf_field() }}
+                                 <input type="hidden" name="id" value="{{$point->id}}">
                                  <input type="hidden" name="user_id" value="{{$point->user_id}}">
-                                 @if($point->status != "付与完了")
+                                 @if($point->status == "未付与" )
                                  <input name="action" id="submit_button" class="btn btn-success" type="submit" value="決済">
                             	@endif
                             	</form>

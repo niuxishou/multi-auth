@@ -62,12 +62,12 @@ Route::post('/create_review', 'CreateReviewController@create_review');
 
 Route::get('/point_history', 'UserController@point_history');
 Route::get('/point_purchase', 'UserController@point_purchase');
-Route::post('/point_purchase', 'UserController@point_purchase');
-Route::get('/select_payment', 'UserController@select_payment');
-Route::post('/select_payment', 'UserController@post_payment');
-Route::get('/bank_payment', 'UserController@bank_payment');
+//Route::post('/point_purchase', 'UserController@point_purchase');
+//Route::get('/select_payment', 'UserController@select_payment');
+Route::post('/select_payment', 'UserController@select_payment');
+//Route::get('/bank_payment', 'UserController@bank_payment');
 Route::post('/bank_payment', 'UserController@bank_payment');
-Route::get('/credit_payment', 'UserController@credit_payment');
+//Route::get('/credit_payment', 'UserController@credit_payment');
 Route::post('/credit_payment', 'UserController@credit_payment');
 
 Route::get('/order_stylist', 'OrderStylistController@order');

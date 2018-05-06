@@ -170,6 +170,11 @@
                 <div class="card-body">
                  <p>購入手続き誠にありがとうございます。</p>
                  <p>下記の振込先までお振込をお願いいたします。</p>
+                 <div>銀行名：XXX銀行</div>
+                 <div>支店名：XXX支店</div>
+                 <div>口座番号：1234567</div>
+                 <div>口座種別：普通預金</div>
+                 <div>名義人：XXXXXX</div>
             </div>
         </div>
     </body>
